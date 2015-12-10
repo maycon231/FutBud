@@ -9,7 +9,7 @@ If you can't build the source for unknown reason, you can download binary files 
  
  [Thielj] (https://github.com/thielj) - Metro Framework
  
- & many other
+ M-Denz & many others
  
 ## Supported platforms
 - .NET 4.5
