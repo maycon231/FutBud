@@ -29,5 +29,14 @@
     <Setting Name="Debug" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="AutoPrice" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="BuyPerc" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">0.8</Value>
+    </Setting>
+    <Setting Name="SellPerc" Type="System.Decimal" Scope="User">
+      <Value Profile="(Default)">0.98</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

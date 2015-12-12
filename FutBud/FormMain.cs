@@ -8,6 +8,7 @@ using System.Media;
 using System.Net;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using FutBud.Properties;
 using FutBud.Services;
@@ -41,6 +42,9 @@ namespace FutBud
         private bool _checkforupdates = Properties.Settings.Default.CheckUpdateStartup;
         private bool _playSound = Properties.Settings.Default.PlaySound;
         private bool _resetCounter = Properties.Settings.Default.ResetCounter;
+        private bool _autoPrice = Properties.Settings.Default.AutoPrice;
+        private decimal _buyperc = Properties.Settings.Default.BuyPerc;
+        private decimal _sellperc = Properties.Settings.Default.SellPerc;
         private readonly string[] _account;
 
         #endregion
@@ -65,6 +69,9 @@ namespace FutBud
             cbPlaySound.Checked = _playSound;
             cbResetCounter.Checked = _resetCounter;
             cbDebug.Checked = _debug;
+            cbAutoprice.Checked = _autoPrice;
+            nudBuy.Value = _buyperc*100;
+            nudSell.Value = _sellperc*100;
             lblAccount.Text = account[0];
             lblVersion.Text = @"Version " + ProductVersion;
             if(_client!=null)
@@ -97,6 +104,11 @@ namespace FutBud
             tbLog.SelectedText = DateTime.Now.ToLongTimeString() + " Started" + Environment.NewLine;
             tmrSearchRequest.Enabled = true;
             tmrChecktradepile.Enabled = true;
+            if (_autoPrice)
+            {
+                tmrCheckprices.Enabled = true;
+                tmrCheckprices_Tick(null, null);
+            }
             psStatus.Spinning = true;
             btnStart.Checked = true;
             WriteLog.DoWrite("Bot started");
@@ -109,9 +121,44 @@ namespace FutBud
             tbLog.SelectedText = DateTime.Now.ToLongTimeString() + " Stoped" + Environment.NewLine;
             tmrSearchRequest.Enabled = false;
             tmrChecktradepile.Enabled = false;
+            tmrCheckprices.Enabled = false;
             psStatus.Spinning = false;
             btnStart.Checked = false;
             WriteLog.DoWrite("Bot stoped");
+        }
+
+        private async void SetPrices(uint resId, int row)
+        {
+            uint price = 9999999;
+            
+                try
+                {
+
+                    var searchParameters = new PlayerSearchParameters
+                    {
+                        Page = 1,
+                        MaxBuy = price,
+                        ResourceId = resId,
+                        PageSize = 49
+                    };
+
+                    var searchResponse = await _client.SearchAsync(searchParameters);
+
+                    foreach (var auctionInfo in searchResponse.AuctionInfo)
+                    {
+                        if (price > auctionInfo.BuyNowPrice)
+                            price = auctionInfo.BuyNowPrice;
+                    }
+                    
+                    mgTable[2, row].Value = RoundPrices.RoundToFinal((uint)(price * _buyperc));
+                    mgTable[3, row].Value = RoundPrices.RoundToFinal((uint)(price * _sellperc));
+                }
+
+// ReSharper disable once EmptyGeneralCatchClause
+                catch
+                {
+                }
+            
         }
 
         private int _i;
@@ -349,8 +396,13 @@ namespace FutBud
                 mgTable.Rows.Add();
                 int rows = mgTable.Rows.Count;
                 mgTable[1, rows - 2].Value = x.PlayerName;
-                mgTable[2, rows - 2].Value = RoundPrices.RoundToFinal(uint.Parse(x.PurchasePrice));
-                mgTable[3, rows - 2].Value = RoundPrices.RoundToFinal(uint.Parse(x.SellPrice));
+                try
+                {
+                    mgTable[2, rows - 2].Value = RoundPrices.RoundToFinal(uint.Parse(x.PurchasePrice));
+                    mgTable[3, rows - 2].Value = RoundPrices.RoundToFinal(uint.Parse(x.SellPrice));
+                }
+                catch
+                { }
                 mgTable[4, rows - 2].Value = 0; //Counter
                 mgTable[5, rows - 2].Value = x.Rarity;
                 mgTable[6, rows - 2].Value = x.Rating;
@@ -530,13 +582,9 @@ namespace FutBud
 
         private void tmrChecktradepile_Tick(object sender, EventArgs e)
         {
-            if(_debug)
-            {
-                tbLog.SelectionColor = Color.Blue;
-                tbLog.SelectedText = DateTime.Now.ToLongTimeString() + " Checking Tradepile + Credits " +
+            tbLog.SelectionColor = Color.Blue;
+            tbLog.SelectedText = DateTime.Now.ToLongTimeString() + " Checking Tradepile + Credits " +
                                      Environment.NewLine;
-            }
-                
             Checktradepile();
         }
 
@@ -669,6 +717,9 @@ namespace FutBud
             Application.Exit();
             Properties.Settings.Default.MetroColor = metroStyleManager.Style;
             Properties.Settings.Default.MetroTheme = metroStyleManager.Theme;
+            Properties.Settings.Default.AutoPrice = _autoPrice;
+            Properties.Settings.Default.BuyPerc = _buyperc;
+            Properties.Settings.Default.SellPerc = _sellperc;
             Properties.Settings.Default.Save();
         }
 
@@ -714,6 +765,39 @@ namespace FutBud
         {
             _debug = cbDebug.Checked;
         }
+
+        private void cbAutoprice_CheckedChanged(object sender, EventArgs e)
+        {
+            _autoPrice = cbAutoprice.Checked;
+            if(_autoPrice)
+                tmrCheckprices_Tick(null, null);
+        }
+
+        private void nudBuy_ValueChanged(object sender, EventArgs e)
+        {
+            _buyperc = nudBuy.Value/100;
+        }
+
+        private void nudSell_ValueChanged(object sender, EventArgs e)
+        {
+            _sellperc = nudSell.Value/100;
+        }
+
+        
+
+        private async void tmrCheckprices_Tick(object sender, EventArgs e)
+        {
+            tbLog.SelectionColor = Color.Blue;
+            tbLog.SelectedText = DateTime.Now.ToLongTimeString() + " Setting prices " +
+                                     Environment.NewLine;
+            for (int i = 0; i < mgTable.RowCount-1; i++)
+            {
+                SetPrices(uint.Parse(mgTable[8, i].Value.ToString()), i);
+                await Task.Delay(500);
+            }
+        }
+
+        
         
     }
 }
