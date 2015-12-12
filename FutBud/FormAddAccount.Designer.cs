@@ -135,18 +135,18 @@ namespace FutBud
             this.lblUsername.AutoSize = true;
             this.lblUsername.Location = new System.Drawing.Point(185, 64);
             this.lblUsername.Name = "lblUsername";
-            this.lblUsername.Size = new System.Drawing.Size(68, 19);
+            this.lblUsername.Size = new System.Drawing.Size(41, 19);
             this.lblUsername.TabIndex = 3;
-            this.lblUsername.Text = "Username";
+            this.lblUsername.Text = "Email";
             // 
             // lblPassword
             // 
             this.lblPassword.AutoSize = true;
             this.lblPassword.Location = new System.Drawing.Point(185, 92);
             this.lblPassword.Name = "lblPassword";
-            this.lblPassword.Size = new System.Drawing.Size(63, 19);
+            this.lblPassword.Size = new System.Drawing.Size(105, 19);
             this.lblPassword.TabIndex = 4;
-            this.lblPassword.Text = "Password";
+            this.lblPassword.Text = "Origin Password";
             // 
             // lblSecret
             // 
@@ -196,7 +196,7 @@ namespace FutBud
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(283, 248);
+            this.ClientSize = new System.Drawing.Size(308, 248);
             this.Controls.Add(this.btnAddAccount);
             this.Controls.Add(this.lblPlatform);
             this.Controls.Add(this.cbPlatform);

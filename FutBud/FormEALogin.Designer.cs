@@ -140,18 +140,18 @@ namespace FutBud
             this.lblUsername.AutoSize = true;
             this.lblUsername.Location = new System.Drawing.Point(185, 64);
             this.lblUsername.Name = "lblUsername";
-            this.lblUsername.Size = new System.Drawing.Size(68, 19);
+            this.lblUsername.Size = new System.Drawing.Size(41, 19);
             this.lblUsername.TabIndex = 3;
-            this.lblUsername.Text = "Username";
+            this.lblUsername.Text = "Email";
             // 
             // lblPassword
             // 
             this.lblPassword.AutoSize = true;
             this.lblPassword.Location = new System.Drawing.Point(185, 92);
             this.lblPassword.Name = "lblPassword";
-            this.lblPassword.Size = new System.Drawing.Size(63, 19);
+            this.lblPassword.Size = new System.Drawing.Size(105, 19);
             this.lblPassword.TabIndex = 4;
-            this.lblPassword.Text = "Password";
+            this.lblPassword.Text = "Origin Password";
             // 
             // lblSecret
             // 
@@ -202,7 +202,7 @@ namespace FutBud
             this.lblVersion.AutoSize = true;
             this.lblVersion.Location = new System.Drawing.Point(373, 272);
             this.lblVersion.Name = "lblVersion";
-            this.lblVersion.Size = new System.Drawing.Size(80, 19);
+            this.lblVersion.Size = new System.Drawing.Size(83, 19);
             this.lblVersion.TabIndex = 13;
             this.lblVersion.Text = "Version 1.0.0";
             // 
