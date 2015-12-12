@@ -230,6 +230,7 @@ namespace FutBud
 
         private async void Checktradepile()
         {
+            int tradepilecount = 0;
             try
             {
                 var tradePileResponse = await _client.GetTradePileAsync();
@@ -245,26 +246,36 @@ namespace FutBud
                                 response.ItemData != null) //Player to list
                             {
                                 var sellprice = uint.Parse(mgTable[3, i].Value.ToString());
+
                                 if (sellprice == 0) //if price = 0 do not sell
-                                    break;
+                                    continue;
 
                                 if (sellprice > 100000)
                                 {
                                     var auctionDetails = new AuctionDetails(response.ItemData.Id,
                                         AuctionDuration.OneHour,
-                                        RoundPrices.RoundToFinal(sellprice - 1000), sellprice); //bidprice, buynow price
+                                        RoundPrices.RoundToFinal(sellprice - 1000), RoundPrices.RoundToFinal(sellprice)); //bidprice, buynow price
                                     await _client.ListAuctionAsync(auctionDetails);
+                                    WriteLog.DoWrite("Listing " + mgTable[1, i].Value + " for " + auctionDetails.BuyNowPrice);
+                                    tbLog.SelectionColor = Color.Black;
+                                    tbLog.SelectedText =
+                                        (DateTime.Now.ToLongTimeString() + " Listing " + mgTable[1, i].Value + " for " + auctionDetails.BuyNowPrice + " Credits" +
+                                        Environment.NewLine);
                                 }
                                 else
                                 {
                                     var auctionDetails = new AuctionDetails(response.ItemData.Id,
                                         AuctionDuration.OneHour,
-                                        RoundPrices.RoundToFinal(sellprice - 250), sellprice); //bidprice, buynow price
+                                        RoundPrices.RoundToFinal(sellprice - 250), RoundPrices.RoundToFinal(sellprice)); //bidprice, buynow price
                                     await _client.ListAuctionAsync(auctionDetails);
+                                    WriteLog.DoWrite("Listing " + mgTable[1, i].Value + " for " + auctionDetails.BuyNowPrice);
+                                    tbLog.SelectionColor = Color.Black;
+                                    tbLog.SelectedText =
+                                        (DateTime.Now.ToLongTimeString() + " Listing " + mgTable[1, i].Value + " for " + auctionDetails.BuyNowPrice + " Credits" +
+                                        Environment.NewLine);
                                 }
-                                continue;
                             }
-                            if (response.TradeState != null && response.ItemData != null &&
+                            else if (response.TradeState != null && response.ItemData != null &&
                                 (response.TradeState.Contains("closed"))) //Player sold
                             {
                                 await _client.RemoveFromTradePileAsync(response);
@@ -279,18 +290,11 @@ namespace FutBud
                                     SystemSounds.Exclamation.Play();
                             }
 
-                            //TODO ITEMS ON TRADEPILE
-                            /*if (response.TradeState != null && response.ItemData != null) //Player on tradepile
-                                {
-                                    tbTradepile.Text = "" + tbTradepile.Text + dgList[0, i].Value + " - " +
-                                                       response.BuyNowPrice + " Coins - " + response.Expires / 60 +
-                                                       " Minutes left " +
-                                                 Environment.NewLine;
-                                    tbTradepile.Text = "" + tbTradepile.Text + "***********************************************" +
-                                                 Environment.NewLine;
-
-                                }
-                                */
+                            if (response.TradeState != null && response.ItemData != null) //Player on tradepile
+                            {
+                                tradepilecount++;
+                            }
+                                
                         }
                 }
             }
@@ -303,6 +307,7 @@ namespace FutBud
             finally
             {
                 GetCredits();
+                lblTradepile.Text = "Items on Tradepile: " + tradepilecount;
             }
             
         }
@@ -344,8 +349,8 @@ namespace FutBud
                 mgTable.Rows.Add();
                 int rows = mgTable.Rows.Count;
                 mgTable[1, rows - 2].Value = x.PlayerName;
-                mgTable[2, rows - 2].Value = x.PurchasePrice;
-                mgTable[3, rows - 2].Value = x.SellPrice;
+                mgTable[2, rows - 2].Value = RoundPrices.RoundToFinal(uint.Parse(x.PurchasePrice));
+                mgTable[3, rows - 2].Value = RoundPrices.RoundToFinal(uint.Parse(x.SellPrice));
                 mgTable[4, rows - 2].Value = 0; //Counter
                 mgTable[5, rows - 2].Value = x.Rarity;
                 mgTable[6, rows - 2].Value = x.Rating;

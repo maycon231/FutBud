@@ -100,6 +100,9 @@ namespace FutBud
                 int i = 0;
                 foreach (SearchResultJson.Item item in deserializedProduct.items)
                 {
+                    //skip informs
+                    if(item.specialImages.medTOTWImgUrl!=null)
+                        continue;
                     mgTable.Rows.Add();
                     //get image
                     var reqImg = (HttpWebRequest)WebRequest.Create(item.headshot.medImgUrl);
@@ -121,7 +124,7 @@ namespace FutBud
                     //position
                     mgTable[4, i].Value = item.position;
                     //Id
-                    mgTable[5, i].Value = item.id;
+                    mgTable[5, i].Value = item.baseId;
                     //ImageUrl
                     mgTable[6, i].Value = item.headshot.medImgUrl;
                     i++;
