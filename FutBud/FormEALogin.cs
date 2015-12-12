@@ -80,11 +80,9 @@ namespace FutBud
             {
 
                 await _client.LoginAsync(loginDetails, provider);
-                if (!File.Exists("cookies\\" + user + "_cookie.dat"))
-                {
-                    var cookiecontainer = _client.RequestFactories.CookieContainer;
-                    CookieUtil.WriteCookiesToDisk("cookies\\" + user + "_cookie.dat", cookiecontainer);
-                }
+                var cookiecontainer = _client.RequestFactories.CookieContainer;
+                CookieUtil.WriteCookiesToDisk("cookies\\" + user + "_cookie.dat", cookiecontainer);
+                
                 var frm = new FormMain(_client, new[] {user,password, sAnswer, cbPlatform.SelectedIndex.ToString()});
                 frm.Show();
                 Hide();

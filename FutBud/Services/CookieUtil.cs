@@ -9,6 +9,7 @@ namespace FutBud.Services
     {
         public static void WriteCookiesToDisk(string file, CookieContainer c)
         {
+            /*
             CookieContainer ccnew = new CookieContainer();
 
             //get the auth cookie "_nx_mpcid" from the cookiecontainer
@@ -18,7 +19,7 @@ namespace FutBud.Services
                 if (cookie.Name.Equals("_nx_mpcid"))
                     ccnew.Add(cookie);
             }
-
+            */
             //save the cookiecontainer with the the auth cookie "_nx_mpcid"
             using (Stream stream = File.Create(file))
             {
@@ -26,7 +27,7 @@ namespace FutBud.Services
                 {
                     WriteLog.DoWrite("Writing cookies to disk... ");
                     BinaryFormatter formatter = new BinaryFormatter();
-                    formatter.Serialize(stream, ccnew);
+                    formatter.Serialize(stream, c);
                     WriteLog.DoWrite("Done.");
                 }
                 catch (Exception e)
