@@ -14,6 +14,27 @@ If you can't build the source for unknown reason, you can download binary files 
 ## Supported platforms
 - .NET 4.5
 
+## Changelog
+
+######[13.12.15] Update 0.9.4
+- Added autopricing
+- Tradepile bugfix
+- Count of items on tradepile
+- Login instructions made clearer
+- Bugfixes
+
+######[07.12.15] Update 0.9.3
+- Option to reset counters on load
+- Option to play sound when player bough/sold
+- Display session profit
+- Bugfixes
+
+######[23.11.15] Update 0.9.2
+- Multiaccount support
+- Auto relog on disconnect
+- Bugfixes
+
+
 ## Screenshots
 
 ![FutBud](http://futbud.com/download/Main.png )
