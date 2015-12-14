@@ -22,7 +22,7 @@ If you can't build the source for unknown reason, you can download binary files 
 - Tradepile bugfix when more than 1 item is listed
 - Bugfixes
 
-######[13.12.15] Update 0.9.4
+######[13.12.15] Update 0.9.4/0.9.4.1
 - Added autopricing
 - Tradepile bugfix
 - Count of items on tradepile
