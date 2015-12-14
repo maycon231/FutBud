@@ -85,7 +85,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="UltimateTeam.Toolkit, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Ref\UltimateTeam.Toolkit.dll</HintPath>
+      <HintPath>..\..\FIFA-Ultimate-Team-Toolkit\UltimateTeam.Toolkit\bin\Release\UltimateTeam.Toolkit.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

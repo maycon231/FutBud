@@ -87,31 +87,16 @@ namespace FutBud
                 frm.Show();
                 Hide();
             }
-            catch (WrongUserPwException)
-            {
-                MessageBox.Show("Wrong Username/Password");
-                _client = null;
-            }
-            catch (TwoFactorException)
-            {
-                MessageBox.Show("Wrong security code entered");
-                _client = null;
-            }
-            catch (WrongSecretAnswerException)
-            {
-                MessageBox.Show("Wrong secret answer");
-                _client = null;
-            }
             catch (FutException ex)
             {
-                MessageBox.Show("Login Failed");
-                WriteLog.DoWrite("Login Failed: " + ex.Message);
+                MessageBox.Show("Login Failed: " + ex.InnerException.Message);
+                WriteLog.DoWrite("Login Failed: " + ex.InnerException.Message);
                 _client = null;
             }
             catch (Exception ex)
             {
 
-                MessageBox.Show("Error");
+                MessageBox.Show("Error -  check the log for detial information");
                 WriteLog.DoWrite("Login Error: " + ex.Message);
                 _client = null;
 

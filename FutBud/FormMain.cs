@@ -65,6 +65,8 @@ namespace FutBud
             numericUpDownPricefix.Value = _maxplayersonrequest;
             tmrChecktradepile.Interval = _tradepileMs;
             tmrSearchRequest.Interval = _searchMs;
+            trackbarSearch.Value = _searchMs;
+            trackbarChecktradepile.Value = _tradepileMs;
             cbCheckforUpdates.Checked = _checkforupdates;
             cbPlaySound.Checked = _playSound;
             cbResetCounter.Checked = _resetCounter;
@@ -127,9 +129,9 @@ namespace FutBud
             WriteLog.DoWrite("Bot stoped");
         }
 
-        private async void SetPrices(uint resId, int row)
+        private async void SetPrices(uint resId, int row, uint val)
         {
-            uint price = 9999999;
+            uint price = val;
             
                 try
                 {
@@ -149,13 +151,34 @@ namespace FutBud
                         if (price > auctionInfo.BuyNowPrice)
                             price = auctionInfo.BuyNowPrice;
                     }
-                    
-                    mgTable[2, row].Value = RoundPrices.RoundToFinal((uint)(price * _buyperc));
-                    mgTable[3, row].Value = RoundPrices.RoundToFinal((uint)(price * _sellperc));
+
+                    await Task.Delay(1000);
+
+                    if (price < val)
+                        SetPrices(resId, row, price);
+                    else
+                    {
+                        mgTable[2, row].Value = RoundPrices.RoundToFinal((uint) (price*_buyperc));
+                        mgTable[3, row].Value = RoundPrices.RoundToFinal((uint) (price*_sellperc));
+                    }
+                }
+                catch (ExpiredSessionException) //Session Expired
+                {
+                    WriteLog.DoWrite("Session Expired");
+                    tbLog.SelectionColor = Color.Red;
+                    tbLog.SelectedText = DateTime.Now.ToLongTimeString() + " Session Expired " +
+                                         Environment.NewLine;
+                    Stopbot();
+                    using (var x = new FormRelog(_account))
+                    {
+                        x.ShowDialog();
+                        this._client = x.Client;
+                    }
+                    Startbot();
                 }
 
-// ReSharper disable once EmptyGeneralCatchClause
-                catch
+            // ReSharper disable once EmptyGeneralCatchClause
+            catch
                 {
                 }
             
@@ -283,6 +306,7 @@ namespace FutBud
                 var tradePileResponse = await _client.GetTradePileAsync();
                 foreach (var response in tradePileResponse.AuctionInfo)
                 {
+                    await Task.Delay(2000);
                     for (var i = 0; i < mgTable.Rows.Count - 1; i++)
 
                         if (response.ItemData != null &&
@@ -293,36 +317,26 @@ namespace FutBud
                                 response.ItemData != null) //Player to list
                             {
                                 var sellprice = uint.Parse(mgTable[3, i].Value.ToString());
+                                
 
                                 if (sellprice == 0) //if price = 0 do not sell
                                     continue;
-
-                                if (sellprice > 100000)
-                                {
-                                    var auctionDetails = new AuctionDetails(response.ItemData.Id,
-                                        AuctionDuration.OneHour,
-                                        RoundPrices.RoundToFinal(sellprice - 1000), RoundPrices.RoundToFinal(sellprice)); //bidprice, buynow price
-                                    await _client.ListAuctionAsync(auctionDetails);
-                                    WriteLog.DoWrite("Listing " + mgTable[1, i].Value + " for " + auctionDetails.BuyNowPrice);
-                                    tbLog.SelectionColor = Color.Black;
-                                    tbLog.SelectedText =
-                                        (DateTime.Now.ToLongTimeString() + " Listing " + mgTable[1, i].Value + " for " + auctionDetails.BuyNowPrice + " Credits" +
-                                        Environment.NewLine);
-                                }
                                 else
                                 {
                                     var auctionDetails = new AuctionDetails(response.ItemData.Id,
-                                        AuctionDuration.OneHour,
-                                        RoundPrices.RoundToFinal(sellprice - 250), RoundPrices.RoundToFinal(sellprice)); //bidprice, buynow price
+                                         AuctionDuration.OneHour,
+                                         RoundPrices.RoundToFinal(sellprice-50), RoundPrices.RoundToFinal(sellprice)); //bidprice, buynow price
                                     await _client.ListAuctionAsync(auctionDetails);
+                                    
                                     WriteLog.DoWrite("Listing " + mgTable[1, i].Value + " for " + auctionDetails.BuyNowPrice);
                                     tbLog.SelectionColor = Color.Black;
                                     tbLog.SelectedText =
                                         (DateTime.Now.ToLongTimeString() + " Listing " + mgTable[1, i].Value + " for " + auctionDetails.BuyNowPrice + " Credits" +
                                         Environment.NewLine);
+                                    continue;
                                 }
                             }
-                            else if (response.TradeState != null && response.ItemData != null &&
+                            if (response.TradeState != null && response.ItemData != null &&
                                 (response.TradeState.Contains("closed"))) //Player sold
                             {
                                 await _client.RemoveFromTradePileAsync(response);
@@ -335,6 +349,7 @@ namespace FutBud
                                     Environment.NewLine;
                                 if (_playSound)
                                     SystemSounds.Exclamation.Play();
+                                continue;
                             }
 
                             if (response.TradeState != null && response.ItemData != null) //Player on tradepile
@@ -345,7 +360,21 @@ namespace FutBud
                         }
                 }
             }
-            catch(Exception ex)
+            catch (ExpiredSessionException) //Session Expired
+            {
+                WriteLog.DoWrite("Session Expired");
+                tbLog.SelectionColor = Color.Red;
+                tbLog.SelectedText = DateTime.Now.ToLongTimeString() + " Session Expired " +
+                                     Environment.NewLine;
+                Stopbot();
+                using (var x = new FormRelog(_account))
+                {
+                    x.ShowDialog();
+                    this._client = x.Client;
+                }
+                Startbot();
+            }
+            catch (Exception ex)
             {
                 tbLog.SelectionColor = Color.Red;
                 WriteLog.DoWrite("Tradepile Error: " +ex);
@@ -379,7 +408,21 @@ namespace FutBud
                     lblProfitval.Text = _profit.ToString();
                 }
             }
-            catch(Exception ex)
+            catch (ExpiredSessionException) //Session Expired
+            {
+                WriteLog.DoWrite("Session Expired");
+                tbLog.SelectionColor = Color.Red;
+                tbLog.SelectedText = DateTime.Now.ToLongTimeString() + " Session Expired " +
+                                     Environment.NewLine;
+                Stopbot();
+                using (var x = new FormRelog(_account))
+                {
+                    x.ShowDialog();
+                    this._client = x.Client;
+                }
+                Startbot();
+            }
+            catch (Exception ex)
             {
                 tbLog.SelectionColor = Color.Red;
                 WriteLog.DoWrite("Error getting Credits: " + ex);
@@ -792,7 +835,7 @@ namespace FutBud
                                      Environment.NewLine;
             for (int i = 0; i < mgTable.RowCount-1; i++)
             {
-                SetPrices(uint.Parse(mgTable[8, i].Value.ToString()), i);
+                SetPrices(uint.Parse(mgTable[8, i].Value.ToString()), i, 99999999);
                 await Task.Delay(500);
             }
         }

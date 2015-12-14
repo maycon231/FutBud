@@ -101,7 +101,7 @@ namespace FutBud
                 foreach (SearchResultJson.Item item in deserializedProduct.items)
                 {
                     //skip informs
-                    if(item.specialImages.medTOTWImgUrl!=null)
+                    if(item.color.Contains("totw")|| item.color.Contains("motm") || item.color.Contains("purple") || item.color.Contains("legend"))
                         continue;
                     mgTable.Rows.Add();
                     //get image
