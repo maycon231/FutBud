@@ -16,7 +16,7 @@ If you can't build the source for unknown reason, you can download binary files 
 
 ## Changelog
 
-######[[14.12.15] Update 0.9.4.2
+######[14.12.15] Update 0.9.4.2
 - Failed login should now (finally) display a proper message
 - Better Autopricing (thanks HunterJm)
 - Tradepile bugfix when more than 1 item is listed
