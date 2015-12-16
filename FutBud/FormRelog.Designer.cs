@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormRelog));
             this.btnClose = new MetroFramework.Controls.MetroButton();
             this.lblRelog = new MetroFramework.Controls.MetroLabel();
             this.lblTimer = new MetroFramework.Controls.MetroLabel();
@@ -77,9 +78,9 @@
             this.Controls.Add(this.lblTimer);
             this.Controls.Add(this.lblRelog);
             this.Controls.Add(this.btnClose);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormRelog";
             this.Resizable = false;
-            this.Text = "FormRelog";
             this.ResumeLayout(false);
             this.PerformLayout();
 

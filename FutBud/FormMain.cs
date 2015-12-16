@@ -10,6 +10,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using AutoUpdaterDotNET;
 using FutBud.Properties;
 using FutBud.Services;
 using MetroFramework;
@@ -39,7 +40,6 @@ namespace FutBud
         private int _searchMs = Properties.Settings.Default.SearchRPM;
         private int _tradepileMs = Properties.Settings.Default.TradepileRPM;
         private int _maxplayersonrequest = Properties.Settings.Default.MaxPlayersFound;
-        private bool _checkforupdates = Properties.Settings.Default.CheckUpdateStartup;
         private bool _playSound = Properties.Settings.Default.PlaySound;
         private bool _resetCounter = Properties.Settings.Default.ResetCounter;
         private bool _autoPrice = Properties.Settings.Default.AutoPrice;
@@ -67,7 +67,6 @@ namespace FutBud
             tmrSearchRequest.Interval = _searchMs;
             trackbarSearch.Value = _searchMs;
             trackbarChecktradepile.Value = _tradepileMs;
-            cbCheckforUpdates.Checked = _checkforupdates;
             cbPlaySound.Checked = _playSound;
             cbResetCounter.Checked = _resetCounter;
             cbDebug.Checked = _debug;
@@ -152,7 +151,7 @@ namespace FutBud
                             price = auctionInfo.BuyNowPrice;
                     }
 
-                    await Task.Delay(1000);
+                    await Task.Delay(2000);
 
                     if (price < val)
                         SetPrices(resId, row, price);
@@ -743,7 +742,6 @@ namespace FutBud
             Properties.Settings.Default.SearchRPM = _searchMs;
             Properties.Settings.Default.TradepileRPM = _tradepileMs;
             Properties.Settings.Default.MaxPlayersFound = _maxplayersonrequest;
-            Properties.Settings.Default.CheckUpdateStartup = _checkforupdates;
             Properties.Settings.Default.ResetCounter = _resetCounter;
             Properties.Settings.Default.PlaySound = _playSound;
             Properties.Settings.Default.Debug = _debug;
@@ -766,34 +764,6 @@ namespace FutBud
             Properties.Settings.Default.Save();
         }
 
-        private void btnCheckUpdates_Click(object sender, EventArgs e)
-        {
-            string str;
-            try
-            {
-                str = VersionCheck.Check(ProductVersion);
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Could not check version :(");
-                return;
-            }
-
-            if (!str.Equals("ok"))
-            {
-                MessageBox.Show("A new version is available (" + str + "). Please visit 'www.futbud.com' to download the newest version");
-            }
-            else
-            {
-                MessageBox.Show("No update available");
-            }
-        }
-
-        private void cbCheckforUpdates_CheckedChanged(object sender, EventArgs e)
-        {
-            _checkforupdates = cbCheckforUpdates.Checked;
-        }
-
         private void cbResetCounter_CheckedChanged(object sender, EventArgs e)
         {
             _resetCounter = cbResetCounter.Checked;
@@ -812,8 +782,6 @@ namespace FutBud
         private void cbAutoprice_CheckedChanged(object sender, EventArgs e)
         {
             _autoPrice = cbAutoprice.Checked;
-            if(_autoPrice)
-                tmrCheckprices_Tick(null, null);
         }
 
         private void nudBuy_ValueChanged(object sender, EventArgs e)
@@ -836,7 +804,7 @@ namespace FutBud
             for (int i = 0; i < mgTable.RowCount-1; i++)
             {
                 SetPrices(uint.Parse(mgTable[8, i].Value.ToString()), i, 99999999);
-                await Task.Delay(500);
+                await Task.Delay(3000);
             }
         }
 

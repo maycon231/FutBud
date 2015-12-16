@@ -49,10 +49,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoUpdater.NET">
+      <HintPath>Ref\AutoUpdater.NET.dll</HintPath>
+    </Reference>
     <Reference Include="MetroFramework, Version=1.3.5.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Ref\MetroFramework.dll</HintPath>
@@ -85,7 +87,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="UltimateTeam.Toolkit, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\FIFA-Ultimate-Team-Toolkit\UltimateTeam.Toolkit\bin\Release\UltimateTeam.Toolkit.dll</HintPath>
+      <HintPath>Ref\UltimateTeam.Toolkit.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -135,10 +137,7 @@
     <Compile Include="FormMain.Designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="Services\VersionCheck.cs" />
     <Compile Include="Services\WriteLog.cs" />
-    <Compile Include="WCF Stuff\InterfaceWcfService.cs" />
-    <Compile Include="WCF Stuff\MyServiceClient.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SearchResultJson.cs" />
@@ -199,6 +198,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

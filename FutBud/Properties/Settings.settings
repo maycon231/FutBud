@@ -17,9 +17,6 @@
     <Setting Name="MetroTheme" Type="MetroFramework.MetroThemeStyle" Scope="User">
       <Value Profile="(Default)">Default</Value>
     </Setting>
-    <Setting Name="CheckUpdateStartup" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
     <Setting Name="PlaySound" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>

@@ -5,6 +5,7 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using AutoUpdaterDotNET;
 using FutBud.Services;
 using MetroFramework.Forms;
 using UltimateTeam.Toolkit;
@@ -124,24 +125,13 @@ namespace FutBud
 
         private void FormLogin_Load(object sender, EventArgs e)
         {
-            if (Properties.Settings.Default.CheckUpdateStartup)
+            try
             {
-                string str = "";
-                try
-                {
-                    str = VersionCheck.Check(ProductVersion);
-                }
-                catch (Exception)
-                {
-                    MessageBox.Show("Could not check version :(");
-                    return;
-                }
-
-                if (!str.Equals("ok"))
-                {
-                    MessageBox.Show("A new version is available (" + str +
-                                    "). Please visit 'www.futbud.com' to download the newest version");
-                }
+                AutoUpdater.Start("http://futbud.com/download/update.xml");
+            }
+            catch (Exception)
+            {
+                // ignored
             }
         }
 
