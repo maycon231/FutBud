@@ -167,13 +167,6 @@ namespace FutBud
                     tbLog.SelectionColor = Color.Red;
                     tbLog.SelectedText = DateTime.Now.ToLongTimeString() + " Session Expired " +
                                          Environment.NewLine;
-                    Stopbot();
-                    using (var x = new FormRelog(_account))
-                    {
-                        x.ShowDialog();
-                        this._client = x.Client;
-                    }
-                    Startbot();
                 }
 
             // ReSharper disable once EmptyGeneralCatchClause
@@ -285,10 +278,10 @@ namespace FutBud
             }
             catch (Exception ex)
             {
-                WriteLog.DoWrite("Error on search: " + ex);
+                WriteLog.DoWrite("Error on search: " + ex.Message);
                 tbLog.SelectionColor = Color.Red;
                 tbLog.SelectedText = DateTime.Now.ToLongTimeString() +
-                                     " Error on search- Please be sure that your transfermarket is not locked" +
+                                     " Error on search - Possible temp. ban. Check the market on the WebApp. Code: " + ex.Message +
                                      Environment.NewLine;
             }
             finally
@@ -315,16 +308,38 @@ namespace FutBud
                             if ((response.TradeState == null || response.TradeState.Contains("expired")) &&
                                 response.ItemData != null) //Player to list
                             {
-                                var sellprice = uint.Parse(mgTable[3, i].Value.ToString());
-                                
+                                var buynowprice = uint.Parse(mgTable[3, i].Value.ToString());
+                                buynowprice = RoundPrices.RoundToFinal(buynowprice);
+                                var bidprice = buynowprice;
 
-                                if (sellprice == 0) //if price = 0 do not sell
+                                if (buynowprice <= 1000)
+                                {
+                                    bidprice = buynowprice - 50;
+                                }
+                                if (buynowprice > 1000 && buynowprice <= 10000)
+                                {
+                                    bidprice = buynowprice - 100;
+                                }
+                                if (buynowprice > 10000 && buynowprice <= 50000)
+                                {
+                                    bidprice = buynowprice - 250;
+                                }
+                                if (buynowprice > 50000 && buynowprice <= 100000)
+                                {
+                                    bidprice = buynowprice - 500;
+                                }
+                                if (buynowprice > 100000)
+                                {
+                                    bidprice = buynowprice - 1000;
+                                }
+
+                                if (buynowprice == 0) //if price = 0 do not sell
                                     continue;
                                 else
                                 {
                                     var auctionDetails = new AuctionDetails(response.ItemData.Id,
                                          AuctionDuration.OneHour,
-                                         RoundPrices.RoundToFinal(sellprice-50), RoundPrices.RoundToFinal(sellprice)); //bidprice, buynow price
+                                         bidprice, buynowprice); //bidprice, buynow price
                                     await _client.ListAuctionAsync(auctionDetails);
                                     
                                     WriteLog.DoWrite("Listing " + mgTable[1, i].Value + " for " + auctionDetails.BuyNowPrice);
@@ -365,19 +380,12 @@ namespace FutBud
                 tbLog.SelectionColor = Color.Red;
                 tbLog.SelectedText = DateTime.Now.ToLongTimeString() + " Session Expired " +
                                      Environment.NewLine;
-                Stopbot();
-                using (var x = new FormRelog(_account))
-                {
-                    x.ShowDialog();
-                    this._client = x.Client;
-                }
-                Startbot();
             }
             catch (Exception ex)
             {
                 tbLog.SelectionColor = Color.Red;
                 WriteLog.DoWrite("Tradepile Error: " +ex);
-                tbLog.SelectedText = DateTime.Now.ToLongTimeString() + " Tradepile Error" + Environment.NewLine;
+                tbLog.SelectedText = DateTime.Now.ToLongTimeString() + " Tradepile Error: " +ex.Message + Environment.NewLine;
             }
             finally
             {
@@ -413,13 +421,6 @@ namespace FutBud
                 tbLog.SelectionColor = Color.Red;
                 tbLog.SelectedText = DateTime.Now.ToLongTimeString() + " Session Expired " +
                                      Environment.NewLine;
-                Stopbot();
-                using (var x = new FormRelog(_account))
-                {
-                    x.ShowDialog();
-                    this._client = x.Client;
-                }
-                Startbot();
             }
             catch (Exception ex)
             {
@@ -782,6 +783,8 @@ namespace FutBud
         private void cbAutoprice_CheckedChanged(object sender, EventArgs e)
         {
             _autoPrice = cbAutoprice.Checked;
+            if(_autoPrice)
+                tmrCheckprices_Tick(null, null);
         }
 
         private void nudBuy_ValueChanged(object sender, EventArgs e)
