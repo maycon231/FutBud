@@ -12,12 +12,19 @@ namespace FutBud
 {
     public partial class FormAddPlayer : MetroForm
     {
-        public FormAddPlayer(MetroStyleManager styleManager)
+        public FormAddPlayer()
         {
             InitializeComponent();
             StyleManager = metroStyleManager;
-            metroStyleManager.Style = styleManager.Style;
-            metroStyleManager.Theme = styleManager.Theme;
+            try
+            {
+                metroStyleManager.Style = Properties.Settings.Default.MetroColor;
+                metroStyleManager.Theme = Properties.Settings.Default.MetroTheme;
+            }
+            catch
+            {
+                // ignored
+            }
             mgTable.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
         }
 

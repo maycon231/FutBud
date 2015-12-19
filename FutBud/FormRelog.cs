@@ -15,6 +15,16 @@ namespace FutBud
         {
             InitializeComponent();
             this._account = account;
+            StyleManager = metroStyleManager;
+            try
+            {
+                metroStyleManager.Style = Properties.Settings.Default.MetroColor;
+                metroStyleManager.Theme = Properties.Settings.Default.MetroTheme;
+            }
+            catch
+            {
+                // ignored
+            }
             DoRelog();
         }
 

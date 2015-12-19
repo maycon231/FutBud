@@ -20,7 +20,18 @@ namespace FutBud
         {
             InitializeComponent();
             BringToFront();
+            StyleManager = metroStyleManager;
+            try
+            {
+                metroStyleManager.Style = Properties.Settings.Default.MetroColor;
+                metroStyleManager.Theme = Properties.Settings.Default.MetroTheme;
+            }
+            catch
+            {
+                // ignored
+            }
         }
+
 
         private void btnAddAccount_Click(object sender, EventArgs e)
         {

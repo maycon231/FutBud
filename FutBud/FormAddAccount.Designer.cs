@@ -31,6 +31,7 @@ namespace FutBud
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormAddAccount));
             this.tbUsername = new MetroFramework.Controls.MetroTextBox();
             this.tbPassword = new MetroFramework.Controls.MetroTextBox();
@@ -41,6 +42,8 @@ namespace FutBud
             this.cbPlatform = new MetroFramework.Controls.MetroComboBox();
             this.lblPlatform = new MetroFramework.Controls.MetroLabel();
             this.btnAddAccount = new MetroFramework.Controls.MetroButton();
+            this.metroStyleManager = new MetroFramework.Components.MetroStyleManager(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.metroStyleManager)).BeginInit();
             this.SuspendLayout();
             // 
             // tbUsername
@@ -144,7 +147,7 @@ namespace FutBud
             this.lblPassword.AutoSize = true;
             this.lblPassword.Location = new System.Drawing.Point(185, 92);
             this.lblPassword.Name = "lblPassword";
-            this.lblPassword.Size = new System.Drawing.Size(105, 19);
+            this.lblPassword.Size = new System.Drawing.Size(104, 19);
             this.lblPassword.TabIndex = 4;
             this.lblPassword.Text = "Origin Password";
             // 
@@ -192,6 +195,10 @@ namespace FutBud
             this.btnAddAccount.UseSelectable = true;
             this.btnAddAccount.Click += new System.EventHandler(this.btnAddAccount_Click);
             // 
+            // metroStyleManager
+            // 
+            this.metroStyleManager.Owner = this;
+            // 
             // FormAddAccount
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -211,6 +218,7 @@ namespace FutBud
             this.Resizable = false;
             this.Style = MetroFramework.MetroColorStyle.Default;
             this.Text = "Add Account";
+            ((System.ComponentModel.ISupportInitialize)(this.metroStyleManager)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -227,6 +235,7 @@ namespace FutBud
         private MetroComboBox cbPlatform;
         private MetroLabel lblPlatform;
         private MetroButton btnAddAccount;
+        private MetroFramework.Components.MetroStyleManager metroStyleManager;
     }
 }
 

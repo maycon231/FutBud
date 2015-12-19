@@ -31,10 +31,13 @@ namespace FutBud
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TwoFactor));
             this.lblDescription = new MetroFramework.Controls.MetroLabel();
             this.tbCode = new MetroFramework.Controls.MetroTextBox();
             this.btnSubmit = new MetroFramework.Controls.MetroButton();
+            this.metroStyleManager = new MetroFramework.Components.MetroStyleManager(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.metroStyleManager)).BeginInit();
             this.SuspendLayout();
             // 
             // lblDescription
@@ -85,6 +88,10 @@ namespace FutBud
             this.btnSubmit.UseSelectable = true;
             this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
             // 
+            // metroStyleManager
+            // 
+            this.metroStyleManager.Owner = this;
+            // 
             // TwoFactor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -99,6 +106,7 @@ namespace FutBud
             this.Style = MetroFramework.MetroColorStyle.Default;
             this.Text = "TwoFactor";
             this.Load += new System.EventHandler(this.FormTwoFactor_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.metroStyleManager)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -109,5 +117,6 @@ namespace FutBud
         private MetroLabel lblDescription;
         private MetroTextBox tbCode;
         private MetroButton btnSubmit;
+        private MetroFramework.Components.MetroStyleManager metroStyleManager;
     }
 }

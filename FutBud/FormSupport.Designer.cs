@@ -38,6 +38,8 @@
             this.btnDonate = new System.Windows.Forms.Button();
             this.metroTile1 = new MetroFramework.Controls.MetroTile();
             this.btnThanks = new MetroFramework.Controls.MetroButton();
+            this.metroStyleManager = new MetroFramework.Components.MetroStyleManager(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.metroStyleManager)).BeginInit();
             this.SuspendLayout();
             // 
             // btnClose
@@ -68,8 +70,8 @@
             this.lblBlaBla.Name = "lblBlaBla";
             this.lblBlaBla.Size = new System.Drawing.Size(367, 66);
             this.lblBlaBla.TabIndex = 8;
-            this.lblBlaBla.Text = "If you enjoy FutBuddy please consider to make a donation \r\nor using my G2A link t" +
-    "o support the development of FutBud";
+            this.lblBlaBla.Text = "If you enjoy FutBud please consider to make a donation \r\nor using my G2A link to " +
+    "support the development of FutBud";
             // 
             // btnDonate
             // 
@@ -109,6 +111,10 @@
             this.btnThanks.UseSelectable = true;
             this.btnThanks.Click += new System.EventHandler(this.btnThanks_Click);
             // 
+            // metroStyleManager
+            // 
+            this.metroStyleManager.Owner = this;
+            // 
             // FormSupport
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -122,9 +128,11 @@
             this.Controls.Add(this.lblRelog);
             this.Controls.Add(this.btnClose);
             this.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormSupport";
             this.Resizable = false;
             this.Text = "Hello :)";
+            ((System.ComponentModel.ISupportInitialize)(this.metroStyleManager)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -139,5 +147,6 @@
         private System.Windows.Forms.Button btnDonate;
         private MetroFramework.Controls.MetroTile metroTile1;
         private MetroFramework.Controls.MetroButton btnThanks;
+        private MetroFramework.Components.MetroStyleManager metroStyleManager;
     }
 }

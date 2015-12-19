@@ -42,5 +42,34 @@
             }
             return Amount;
         }
+
+        public static uint DoCalcBidprice(uint buynowprice)
+        {
+            var bidprice = buynowprice;
+
+            if (buynowprice <= 1000)
+            {
+                bidprice = buynowprice - 50;
+            }
+            if (buynowprice > 1000 && buynowprice <= 10000)
+            {
+                bidprice = buynowprice - 100;
+            }
+            if (buynowprice > 10000 && buynowprice <= 50000)
+            {
+                bidprice = buynowprice - 250;
+            }
+            if (buynowprice > 50000 && buynowprice <= 100000)
+            {
+                bidprice = buynowprice - 500;
+            }
+            if (buynowprice > 100000)
+            {
+                bidprice = buynowprice - 1000;
+            }
+
+            return bidprice;
+        }
+
     }
 }

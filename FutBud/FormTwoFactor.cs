@@ -8,6 +8,16 @@ namespace FutBud
         public TwoFactor()
         {
             InitializeComponent();
+            StyleManager = metroStyleManager;
+            try
+            {
+                metroStyleManager.Style = Properties.Settings.Default.MetroColor;
+                metroStyleManager.Theme = Properties.Settings.Default.MetroTheme;
+            }
+            catch
+            {
+                // ignored
+            }
         }
 
         public string Code { get; set; }

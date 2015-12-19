@@ -55,24 +55,32 @@ namespace FutBud
             _client = client;
             this._account = account;
             StyleManager = metroStyleManager;
-            metroStyleManager.Style = Properties.Settings.Default.MetroColor;
-            metroStyleManager.Theme = Properties.Settings.Default.MetroTheme;
-            mgTable.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
 
-            tbSearch.Text = (Math.Round((double)_searchMs / 1000, 1)).ToString(CultureInfo.InvariantCulture);
-            tbChecktradepile.Text = (_tradepileMs/1000).ToString();
+            try
+            {
+                metroStyleManager.Style = Properties.Settings.Default.MetroColor;
+                metroStyleManager.Theme = Properties.Settings.Default.MetroTheme;
+                mgTable.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
 
-            numericUpDownPricefix.Value = _maxplayersonrequest;
-            tmrChecktradepile.Interval = _tradepileMs;
-            tmrSearchRequest.Interval = _searchMs;
-            trackbarSearch.Value = _searchMs;
-            trackbarChecktradepile.Value = _tradepileMs;
-            cbPlaySound.Checked = _playSound;
-            cbResetCounter.Checked = _resetCounter;
-            cbDebug.Checked = _debug;
-            cbAutoprice.Checked = _autoPrice;
-            nudBuy.Value = _buyperc*100;
-            nudSell.Value = _sellperc*100;
+                tbSearch.Text = (Math.Round((double) _searchMs/1000, 1)).ToString(CultureInfo.InvariantCulture);
+                tbChecktradepile.Text = (_tradepileMs/1000).ToString();
+
+                numericUpDownPricefix.Value = _maxplayersonrequest;
+                tmrChecktradepile.Interval = _tradepileMs;
+                tmrSearchRequest.Interval = _searchMs;
+                trackbarSearch.Value = _searchMs;
+                trackbarChecktradepile.Value = _tradepileMs;
+                cbPlaySound.Checked = _playSound;
+                cbResetCounter.Checked = _resetCounter;
+                cbDebug.Checked = _debug;
+                cbAutoprice.Checked = _autoPrice;
+                nudBuy.Value = _buyperc*100;
+                nudSell.Value = _sellperc*100;
+            }
+            catch (Exception)
+            {
+                WriteLog.DoWrite("Could not load settings");
+            }
             lblAccount.Text = account[0];
             lblVersion.Text = @"Version " + ProductVersion;
             if(_client!=null)
@@ -135,7 +143,14 @@ namespace FutBud
                 try
                 {
 
-                    var searchParameters = new PlayerSearchParameters
+                var searchParameters2 = new DevelopmentSearchParameters
+                {
+                    Page = 1,
+                    Level = Level.Gold,
+                    DevelopmentType = DevelopmentType.Contract,
+                };
+
+                var searchParameters = new PlayerSearchParameters
                     {
                         Page = 1,
                         MaxBuy = price,
@@ -151,7 +166,7 @@ namespace FutBud
                             price = auctionInfo.BuyNowPrice;
                     }
 
-                    await Task.Delay(2000);
+                    await Task.Delay(1000);
 
                     if (price < val)
                         SetPrices(resId, row, price);
@@ -190,6 +205,7 @@ namespace FutBud
                         Page = 1,
                         MaxBuy = uint.Parse(mgTable[2, _i].Value.ToString()),
                         ResourceId = uint.Parse(mgTable[8, _i].Value.ToString())
+
                     };
 
                     // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
@@ -219,11 +235,10 @@ namespace FutBud
                             int counter = int.Parse(mgTable[4, _i].Value.ToString());
                             counter++;
                             mgTable[4, _i].Value = counter.ToString();
-                            tbLog.SelectionColor = Color.Black;
+                            tbLog.SelectionColor = Color.Goldenrod;
                             tbLog.SelectedText = DateTime.Now.ToLongTimeString() +
-                                                 " Buyout for Player " +
-                                                 mgTable[1, _i].Value + Environment.NewLine;
-                            WriteLog.DoWrite("Buyout for Player " + mgTable[1, _i].Value);
+                                                 " Buyout for " + mgTable[1, _i].Value + " for " + auctionInfo.BuyNowPrice + " Credits" + Environment.NewLine;
+                            WriteLog.DoWrite("Buyout for " + mgTable[1, _i].Value + " for " + auctionInfo.BuyNowPrice + " Credits");
                             if (_playSound)
                                 SystemSounds.Exclamation.Play();
                             GetCredits();
@@ -281,7 +296,7 @@ namespace FutBud
                 WriteLog.DoWrite("Error on search: " + ex.Message);
                 tbLog.SelectionColor = Color.Red;
                 tbLog.SelectedText = DateTime.Now.ToLongTimeString() +
-                                     " Error on search - Possible temp. ban. Check the market on the WebApp. Code: " + ex.Message +
+                                     " Error on search - Possible temp. ban. Check the market on the WebApp. " + ex.Message +
                                      Environment.NewLine;
             }
             finally
@@ -310,28 +325,7 @@ namespace FutBud
                             {
                                 var buynowprice = uint.Parse(mgTable[3, i].Value.ToString());
                                 buynowprice = RoundPrices.RoundToFinal(buynowprice);
-                                var bidprice = buynowprice;
-
-                                if (buynowprice <= 1000)
-                                {
-                                    bidprice = buynowprice - 50;
-                                }
-                                if (buynowprice > 1000 && buynowprice <= 10000)
-                                {
-                                    bidprice = buynowprice - 100;
-                                }
-                                if (buynowprice > 10000 && buynowprice <= 50000)
-                                {
-                                    bidprice = buynowprice - 250;
-                                }
-                                if (buynowprice > 50000 && buynowprice <= 100000)
-                                {
-                                    bidprice = buynowprice - 500;
-                                }
-                                if (buynowprice > 100000)
-                                {
-                                    bidprice = buynowprice - 1000;
-                                }
+                                var bidprice = RoundPrices.DoCalcBidprice(buynowprice);
 
                                 if (buynowprice == 0) //if price = 0 do not sell
                                     continue;
@@ -354,12 +348,12 @@ namespace FutBud
                                 (response.TradeState.Contains("closed"))) //Player sold
                             {
                                 await _client.RemoveFromTradePileAsync(response);
-                                WriteLog.DoWrite(mgTable[1, i].Value + " sold for " + response.BuyNowPrice);
-                                tbLog.SelectionColor = Color.Black;
+                                WriteLog.DoWrite(mgTable[1, i].Value + " sold for " + response.BuyNowPrice + " Credits");
+                                tbLog.SelectionColor = Color.Goldenrod;
                                 tbLog.SelectedText =
                                     (DateTime.Now.ToLongTimeString() + " " + mgTable[1, i].Value +
                                      " sold for " +
-                                     response.BuyNowPrice) +
+                                     response.BuyNowPrice + " Credits") +
                                     Environment.NewLine;
                                 if (_playSound)
                                     SystemSounds.Exclamation.Play();
@@ -433,7 +427,7 @@ namespace FutBud
         //Add player to list
         private async void btnAdd_Click(object sender, EventArgs e)
         {
-            var x = new FormAddPlayer(StyleManager);
+            var x = new FormAddPlayer();
             if (x.ShowDialog() == DialogResult.OK)
             {
                 mgTable.Rows.Add();
@@ -807,11 +801,15 @@ namespace FutBud
             for (int i = 0; i < mgTable.RowCount-1; i++)
             {
                 SetPrices(uint.Parse(mgTable[8, i].Value.ToString()), i, 99999999);
-                await Task.Delay(3000);
+                await Task.Delay(2000);
             }
         }
 
-        
-        
+        //log autoscroll
+        private void tbLog_TextChanged(object sender, EventArgs e)
+        {
+            tbLog.SelectionStart = tbLog.Text.Length;
+            tbLog.ScrollToCaret(); 
+        }
     }
 }

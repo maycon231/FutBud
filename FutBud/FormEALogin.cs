@@ -19,12 +19,23 @@ namespace FutBud
     {
         public FormEaLogin()
         {
+
             InitializeComponent();
             BringToFront();
             lblVersion.Text = @"Version " + ProductVersion;
             if (!Directory.Exists("cookies"))
                 Directory.CreateDirectory("cookies");
             DoLoadAccount();
+            StyleManager = metroStyleManager;
+            try
+            {
+                metroStyleManager.Style = Properties.Settings.Default.MetroColor;
+                metroStyleManager.Theme = Properties.Settings.Default.MetroTheme;
+            }
+            catch
+            {
+                // ignored
+            }
         }
 
         private FutClient _client;

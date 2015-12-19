@@ -34,6 +34,8 @@
             this.lblRelog = new MetroFramework.Controls.MetroLabel();
             this.lblTimer = new MetroFramework.Controls.MetroLabel();
             this.tmrCountdown = new System.Windows.Forms.Timer(this.components);
+            this.metroStyleManager = new MetroFramework.Components.MetroStyleManager(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.metroStyleManager)).BeginInit();
             this.SuspendLayout();
             // 
             // btnClose
@@ -69,6 +71,10 @@
             this.tmrCountdown.Interval = 500;
             this.tmrCountdown.Tick += new System.EventHandler(this.tmrCountdown_Tick);
             // 
+            // metroStyleManager
+            // 
+            this.metroStyleManager.Owner = this;
+            // 
             // FormRelog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -81,6 +87,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormRelog";
             this.Resizable = false;
+            ((System.ComponentModel.ISupportInitialize)(this.metroStyleManager)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -92,5 +99,6 @@
         private MetroFramework.Controls.MetroLabel lblRelog;
         private MetroFramework.Controls.MetroLabel lblTimer;
         private System.Windows.Forms.Timer tmrCountdown;
+        private MetroFramework.Components.MetroStyleManager metroStyleManager;
     }
 }
