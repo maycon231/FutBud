@@ -1030,7 +1030,7 @@ namespace FutBud
             this.mtChart.Name = "mtChart";
             this.mtChart.Size = new System.Drawing.Size(22, 22);
             this.mtChart.TabIndex = 8;
-            this.mtChart.TileImage = global::FutBud.Properties.Resources.chart1;
+            this.mtChart.TileImage = global::FutBud.Properties.Resources.chart;
             this.mtChart.TileImageAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.mtChart.UseCustomBackColor = true;
             this.mtChart.UseSelectable = true;

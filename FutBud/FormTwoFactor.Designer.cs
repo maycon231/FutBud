@@ -45,9 +45,9 @@ namespace FutBud
             this.lblDescription.AutoSize = true;
             this.lblDescription.Location = new System.Drawing.Point(23, 60);
             this.lblDescription.Name = "lblDescription";
-            this.lblDescription.Size = new System.Drawing.Size(233, 19);
+            this.lblDescription.Size = new System.Drawing.Size(316, 19);
             this.lblDescription.TabIndex = 0;
-            this.lblDescription.Text = "Check your Email for the security code";
+            this.lblDescription.Text = "Enter the securty code sent to you by email/sms/app";
             // 
             // tbCode
             // 
@@ -55,7 +55,7 @@ namespace FutBud
             // 
             // 
             this.tbCode.CustomButton.Image = null;
-            this.tbCode.CustomButton.Location = new System.Drawing.Point(247, 1);
+            this.tbCode.CustomButton.Location = new System.Drawing.Point(288, 1);
             this.tbCode.CustomButton.Name = "";
             this.tbCode.CustomButton.Size = new System.Drawing.Size(21, 21);
             this.tbCode.CustomButton.Style = MetroFramework.MetroColorStyle.Blue;
@@ -72,7 +72,7 @@ namespace FutBud
             this.tbCode.SelectedText = "";
             this.tbCode.SelectionLength = 0;
             this.tbCode.SelectionStart = 0;
-            this.tbCode.Size = new System.Drawing.Size(269, 23);
+            this.tbCode.Size = new System.Drawing.Size(310, 23);
             this.tbCode.TabIndex = 1;
             this.tbCode.UseSelectable = true;
             this.tbCode.WaterMarkColor = System.Drawing.Color.FromArgb(((int)(((byte)(109)))), ((int)(((byte)(109)))), ((int)(((byte)(109)))));
@@ -96,7 +96,7 @@ namespace FutBud
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(316, 163);
+            this.ClientSize = new System.Drawing.Size(357, 163);
             this.Controls.Add(this.btnSubmit);
             this.Controls.Add(this.tbCode);
             this.Controls.Add(this.lblDescription);
