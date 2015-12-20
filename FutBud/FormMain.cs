@@ -11,7 +11,6 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using AutoUpdaterDotNET;
 using FutBud.Properties;
 using FutBud.Services;
 using MetroFramework;

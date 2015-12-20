@@ -5,7 +5,7 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using AutoUpdaterDotNET;
+using AppLimit.NetSparkle;
 using FutBud.Services;
 using MetroFramework.Forms;
 using UltimateTeam.Toolkit;
@@ -17,6 +17,8 @@ namespace FutBud
 {
     public partial class FormEaLogin : MetroForm
     {
+        private Sparkle _sparkle;
+
         public FormEaLogin()
         {
 
@@ -138,7 +140,8 @@ namespace FutBud
         {
             try
             {
-                AutoUpdater.Start("http://futbud.com/download/update.xml");
+                _sparkle = new Sparkle("http://futbud.com/download/version.xml");
+                _sparkle.StartLoop(true);
             }
             catch (Exception)
             {

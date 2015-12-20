@@ -52,8 +52,8 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoUpdater.NET">
-      <HintPath>Ref\AutoUpdater.NET.dll</HintPath>
+    <Reference Include="AppLimit.NetSparkle.Net40">
+      <HintPath>Ref\AppLimit.NetSparkle.Net40.dll</HintPath>
     </Reference>
     <Reference Include="MetroFramework, Version=1.3.5.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
