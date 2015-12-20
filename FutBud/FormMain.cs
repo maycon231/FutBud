@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -34,6 +35,7 @@ namespace FutBud
 
         #region settings
 
+        private List<string[]> _creditsHistoryList = new List<string[]>();
         private int _startcredits = 0;
         private int _profit = 0;
         private bool _debug = Properties.Settings.Default.Debug;
@@ -395,9 +397,13 @@ namespace FutBud
             {
                 var creditsResponse = await _client.GetCreditsAsync();
                 lblCredits.Text = @"Credits: " + creditsResponse.Credits;
+                //get initial credits
                 if (_startcredits.Equals(0))
                     _startcredits = (int)creditsResponse.Credits;
+                //calc profit
                 _profit = (int)creditsResponse.Credits - _startcredits;
+                //add credits to list
+                _creditsHistoryList.Add(new[] { DateTime.Now.ToLongTimeString(), creditsResponse.Credits.ToString()});
                 if (_profit >= 0)
                 {
                     lblProfitval.ForeColor = Color.Green;
@@ -810,6 +816,14 @@ namespace FutBud
         {
             tbLog.SelectionStart = tbLog.Text.Length;
             tbLog.ScrollToCaret(); 
+        }
+
+        private void mtChart_Click(object sender, EventArgs e)
+        {
+            using (var x = new FormChart(_creditsHistoryList))
+            {
+                x.ShowDialog();
+            }
         }
     }
 }

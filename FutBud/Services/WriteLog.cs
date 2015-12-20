@@ -11,9 +11,11 @@ namespace FutBud.Services
     {
         public static void DoWrite(string str)
         {
-            var log = !File.Exists("log.txt") ? new StreamWriter("log.txt") : File.AppendText("log.txt");
-            log.WriteLine(DateTime.Now + " # " + str);
-            log.Close();
+            using (var log = !File.Exists("log.txt") ? new StreamWriter("log.txt") : File.AppendText("log.txt"))
+            {
+                log.WriteLine(DateTime.Now + " # " + str);
+                log.Close();
+            }
         }
     }
     
